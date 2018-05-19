@@ -13,19 +13,22 @@ abismo = 3
 viento = -2
 
 viento con olor = -6
-olor con abismo = -1
 
 jugador = 1
+
+jugador en -6 = -5 viento y olor
+jugador en -4 = -3 olor
+jugador en -2 = -1 viento
 */
 void efecto(int x1, int y1, int tipo){
 	if(mapa[x1][y1] == -2){
 		if (tipo == -4)
-			mapa[x1][y1] = mapa[x1][y1] - tipo;
+			mapa[x1][y1] = mapa[x1][y1] + tipo;
 	} else if(mapa[x1][y1] == -4){
 		if(tipo == -2)
-			mapa[x1][y1] = mapa[x1][y1] - tipo;
+			mapa[x1][y1] = mapa[x1][y1] + tipo;
 	} else if (mapa[x1][y1] != 3){
-		mapa[x1][y1] = mapa[x1][y1] - tipo;
+		mapa[x1][y1] = mapa[x1][y1] + tipo;
 	}
 }
 void olorViento(int x1, int y1, int caracter, int dimension){
@@ -59,26 +62,28 @@ void olorViento(int x1, int y1, int caracter, int dimension){
 }
 void abismos(int cantidad){
 	int dimension = cantidad;
-	int a = dimension - ((double) (dimension*30)/100);
-	cantidad = cantidad / 2;
+	int a = dimension - ((double) (dimension*30)/100); // maximo de abismos aledaños
+	cantidad = cantidad / 2; //Maximo de abismos principales
 	
 	while(cantidad != 0){
-		
-		int n = 2 + rand()%a;
-		
+		//Ubicas abismo principal
 		int x = rand()%dimension;
 		int y = rand()%dimension;
-		
 		mapa[x][y] = 3;
-		olorViento(x,y,2,dimension);
+		
+		//Poner el viento del abismo principal
+		olorViento(x,y,-2,dimension);
+		
+		
+		//Misma logica para abismos aledaños
+		int n = 2 + rand()%a; //Cantidad de aledaños al pincipal
 		if (x != (dimension-1) && x !=0 && y != (dimension-1) && y !=0){
 			while(n != 0){
 				int x1 = (rand()%4) - 2 ;
 				int y1 = (rand()%4) - 2;
-				
 				if(mapa[abs(x+x1)][abs(y+y1)] != 3){
 					mapa[abs(x+x1)][abs(y+y1)] = 3;
-					olorViento(abs(x+x1),abs(y+y1),2,dimension);
+					olorViento(abs(x+x1),abs(y+y1),-2,dimension);
 				}
 				n--;
 			}
@@ -88,16 +93,16 @@ void abismos(int cantidad){
 }
 
 void wumpus(int dimension){
+	//Ubicar al wumpus
 	int x1, y1;
 	do{
 		x1 = rand()%dimension;
 		y1 = rand()%dimension;
 	}while(mapa[x1][y1] == 3);
-	
-	cout<< "(" << x1+1 << "," << y1+1 << ")\n";
-	
 	mapa[x1][y1] = 5;
-	olorViento(x1,y1,4,dimension);
+	
+	//Poner el olor al rededor del wumpus
+	olorViento(x1,y1,-4,dimension);
 }
 
 int main(int argc, char *argv[]) {
@@ -118,10 +123,9 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		
+		//Llenar el mundo con abismos, wumpus y personaje
 		abismos(n);
-		
-		
-		//wumpus(n);
+		wumpus(n);
 		
 		//poner personaje
 		
@@ -134,4 +138,3 @@ int main(int argc, char *argv[]) {
 	}
 	return 0;
 }
-
