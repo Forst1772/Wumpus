@@ -2,139 +2,200 @@
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
-int **mapa = NULL;
+int **map = NULL;
 /* logica del mapa
-terreno = 0
+ground = 0
 
 Wumpus = 5
-olor wumpus = -4
+smell wumpus = -4
 
-abismo = 3
-viento = -2
+abyss = 3
+wind = -2
 
-viento con olor = -6
+wind and smell = -6
 
-jugador = 1
+player = 1
 
-jugador en -6 = -5 viento y olor
-jugador en -4 = -3 olor
-jugador en -2 = -1 viento
+player en -6 = -5 wind and smell
+player en -4 = -3 smell
+player en -2 = -1 wind
 */
-void efecto(int x1, int y1, int tipo){
-	if(mapa[x1][y1] == -2){
-		if (tipo == -4)
-			mapa[x1][y1] = mapa[x1][y1] + tipo;
-	} else if(mapa[x1][y1] == -4){
-		if(tipo == -2)
-			mapa[x1][y1] = mapa[x1][y1] + tipo;
-	} else if (mapa[x1][y1] != 3){
-		mapa[x1][y1] = mapa[x1][y1] + tipo;
+struct Enemy{
+	int positionX;
+	int positionY;
+	bool live;
+};
+
+struct Player{
+	int positionX;
+	int positionY;
+	int move;
+	int usedArrows;
+	bool live;
+};
+void printMap(int n){
+	for(int i = 0; i < n; i++){
+		for(int j = 0; j < n; j++){
+			cout << map[i][j] << "\t";
+		}
+		cout << "\n";
 	}
 }
-void olorViento(int x1, int y1, int caracter, int dimension){
+void particles(int x1, int y1, int type){
+	if(type == 1 || type == -1){
+		map[x1][y1] = map[x1][y1] + type;
+	}else if(map[x1][y1] == -2){
+		if (type == -4)
+			map[x1][y1] = map[x1][y1] + type;
+	} else if(map[x1][y1] == -4){
+		if(type == -2)
+			map[x1][y1] = map[x1][y1] + type;
+	} else if (map[x1][y1] != 3){
+		map[x1][y1] = map[x1][y1] + type;
+	}
+}
+void smellWind(int x1, int y1, int type, int dimension){
 	if(x1 != 0)
-		efecto(x1-1,y1,caracter);
+		particles(x1-1,y1,type);
 	if(y1 != 0)
-		efecto(x1,y1-1,caracter);
+		particles(x1,y1-1,type);
 	if(y1 != dimension)
-		efecto(x1,y1+1,caracter);
+		particles(x1,y1+1,type);
 	if(x1 != 0 && y1 !=0)
-		efecto(x1-1,y1-1,caracter);
+		particles(x1-1,y1-1,type);
 	if(x1 != 0 && y1 != dimension)
-		efecto(x1-1,y1+1,caracter);
-	
+		particles(x1-1,y1+1,type);
 	
 	if(x1 == (dimension-1)){
 		if(x1 == dimension)
-			efecto(x1+1,y1,caracter);
+			particles(x1+1,y1,type);
 		if(x1 == dimension && y1 != 0)
-			efecto(x1+1,y1-1,caracter);
+			particles(x1+1,y1-1,type);
 		if(x1 == dimension && y1 != dimension)
-			efecto(x1+1,y1+1,caracter);
+			particles(x1+1,y1+1,type);
 	}else{
 		if(x1 != dimension)
-			efecto(x1+1,y1,caracter);
+			particles(x1+1,y1,type);
 		if(x1 != dimension && y1 != 0)
-			efecto(x1+1,y1-1,caracter);
+			particles(x1+1,y1-1,type);
 		if(x1 != dimension && y1 != dimension)
-			efecto(x1+1,y1+1,caracter);
+			particles(x1+1,y1+1,type);
 	}
 }
-void abismos(int cantidad){
-	int dimension = cantidad;
-	int a = dimension - ((double) (dimension*30)/100); // maximo de abismos aledaños
-	cantidad = cantidad / 2; //Maximo de abismos principales
+
+void abysses(int cant){
+	int dimension = cant;
+	int a = dimension - ((double) (dimension*30)/100); //Max surrounding abysses
+	cant = cant / 2; //Max principal abysses
 	
-	while(cantidad != 0){
-		//Ubicas abismo principal
+	while(cant != 0){
+		//Principal abyss
 		int x = rand()%dimension;
 		int y = rand()%dimension;
-		mapa[x][y] = 3;
+		map[y][x] = 3;
 		
-		//Poner el viento del abismo principal
-		olorViento(x,y,-2,dimension);
+		//Put wind surrounding the principal abyss
+		smellWind(y,x,-2,dimension);
 		
 		
-		//Misma logica para abismos aledaños
-		int n = 2 + rand()%a; //Cantidad de aledaños al pincipal
+		//Same logic for surrounding abysses
+		int n = 2 + rand()%a; //Amount of surrounding abysses
 		if (x != (dimension-1) && x !=0 && y != (dimension-1) && y !=0){
 			while(n != 0){
 				int x1 = (rand()%4) - 2 ;
 				int y1 = (rand()%4) - 2;
-				if(mapa[abs(x+x1)][abs(y+y1)] != 3){
-					mapa[abs(x+x1)][abs(y+y1)] = 3;
-					olorViento(abs(x+x1),abs(y+y1),-2,dimension);
+				if(map[abs(y+y1)][abs(x+x1)] != 3){
+					map[abs(y+y1)][abs(x+x1)] = 3;
+					smellWind(abs(y+y1),abs(x+x1),-2,dimension);
 				}
 				n--;
 			}
 		}		
-		cantidad--;
+		cant--;
 	}
 }
 
-void wumpus(int dimension){
-	//Ubicar al wumpus
-	int x1, y1;
-	do{
-		x1 = rand()%dimension;
-		y1 = rand()%dimension;
-	}while(mapa[x1][y1] == 3);
-	mapa[x1][y1] = 5;
+Enemy DefWumpus(int dimension){
+	//Define wumpus like Enemy
+	Enemy Wumpus;
 	
-	//Poner el olor al rededor del wumpus
-	olorViento(x1,y1,-4,dimension);
+	Wumpus.live = true;
+	do{
+		Wumpus.positionX = rand()%dimension;
+		Wumpus.positionY = rand()%dimension;
+	}while(map[Wumpus.positionY][Wumpus.positionX] == 3);
+	map[Wumpus.positionY][Wumpus.positionX] = 5;
+	
+	//Put smell around the wumpus
+	smellWind(Wumpus.positionY,Wumpus.positionX,-4,dimension);
+	
+	return Wumpus;
+}
+
+Player DefWarrior(int dimension){
+	//Define warrior like Player
+	Player Warrior;
+	
+	Warrior.live = true;
+	do{
+		Warrior.positionX = rand()%dimension;
+		Warrior.positionY = rand()%dimension;
+	} while(map[Warrior.positionY][Warrior.positionX] == 3 || map[Warrior.positionY][Warrior.positionX] == 5);
+	
+	particles(Warrior.positionY,Warrior.positionX,1);
+	
+	return Warrior;
 }
 
 int main(int argc, char *argv[]) {
 	srand(time(NULL));
-	int n=10;
-	//cin >> n;
+	int n=0;
 	
-	if (n >= 10 && n <= 20){
-		mapa = new int*[n];
-		for(int i = 0; i < n; i++){
-			mapa[i] =  new int[n];
-		}
-		
-		
-		for(int i = 0; i < n; i++){
-			for(int j = 0; j < n; j++){
-				mapa[i][j] = 0;
-			}
-		}
-		
-		//Llenar el mundo con abismos, wumpus y personaje
-		abismos(n);
-		wumpus(n);
-		
-		//poner personaje
-		
-		for(int i = 0; i < n; i++){
-			for(int j = 0; j < n; j++){
-				cout << mapa[i][j] << "\t";
-			}
-			cout << "\n";
+	cout << "Please enter the game board dimension(10-20): ";
+	cin >> n;
+	while (n < 10 || n > 20){
+		system("CLS");
+		cout << "The dimension should be between 10 and 20" << "\n";
+		cout << "Please enter the game board dimension(10-20): ";
+		cin >> n;
+	}
+	
+//{Define game board
+	system("CLS");
+	map = new int*[n];
+	for(int i = 0; i < n; i++){
+		map[i] =  new int[n];
+	}
+	
+	for(int i = 0; i < n; i++){
+		for(int j = 0; j < n; j++){
+			map[i][j] = 0;
 		}
 	}
+	
+	//Define characters
+	Enemy wumpus;
+	Player warrior;
+	
+	//Put abysses, wumpus and player
+	abysses(n);
+	wumpus = DefWumpus(n);
+	warrior = DefWarrior(n);
+	
+	printMap(n);
+//}
+	
+//{Gameplay
+////		while(warrior.live && wumpus.live){
+////			
+////	}
+	
+////	if(warrior.live){
+////		cout << "You win" << "\n" << "¡CONGRATULATIONS!";
+////	} else{
+////		cout << "You dead";
+////	}
+//}
+	
 	return 0;
 }
