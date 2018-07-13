@@ -16,9 +16,9 @@ wind and smell = -6
 
 player = 1
 
-player en -6 = -5 wind and smell
-player en -4 = -3 smell
-player en -2 = -1 wind
+player in -6 = -5 wind and smell
+player in -4 = -3 smell
+player in -2 = -1 wind
 */
 struct Enemy{
 	int positionX;
@@ -149,7 +149,10 @@ Player DefWarrior(int dimension){
 
 int main(int argc, char *argv[]) {
 	srand(time(NULL));
-	int n=0;
+	int n = 0; //Dimension board
+	int state = 0; //State of the warrio
+	int option = 0; //Move or shoot
+	int optShoot = 0; //Place where shoot
 	
 	cout << "Please enter the game board dimension(10-20): ";
 	cin >> n;
@@ -160,7 +163,7 @@ int main(int argc, char *argv[]) {
 		cin >> n;
 	}
 	
-//{Define game board
+	//{Define game board
 	system("CLS");
 	map = new int*[n];
 	for(int i = 0; i < n; i++){
@@ -183,19 +186,82 @@ int main(int argc, char *argv[]) {
 	warrior = DefWarrior(n);
 	
 	printMap(n);
-//}
+	//}
 	
-//{Gameplay
-////		while(warrior.live && wumpus.live){
-////			
-////	}
+	//{Gameplay
+	while(warrior.live && wumpus.live){
+		cout << "Warrior say:\n";
+		for(int i = 0; i < n; i++){
+			for(int j = 0; j < n; j++){
+				if (map[i][j] == -5 || map[i][j] == -3 || map[i][j] == -1)
+					state = map[i][j];
+			}
+		}
+		switch (state){
+		case -5:
+			cout << "player in -6 wind and smell\n";
+			break;
+		case -3:
+			cout << "player in -4 smell\n";
+			break;
+		case -1:
+			cout << "player in -2 wind\n";
+			break;
+		default:
+			cout << "Nothing\n";
+		}
+		
+		do{
+			cout << "\nChoose your turn accion: \n1 = Move\n2 = shoot\n";
+			cin >> option;		}while(option != 1 && option != 2);
+		
+		if(option == 1){//Warrior'll move
+			
+		} else if (option == 2){//warrior'll shoot
+			system("CLS");
+			cout << "Warrior X= "<<warrior.positionX<< " Y= "<<warrior.positionY;
+			cout << " wumpus X= "<<wumpus.positionX<< " Y= "<<wumpus.positionY;
+			
+			
+			cout << "Choose where atack:\n1\t2\t3\n4\tU\t5\n6\t7\t8\n";
+			cin >> optShoot;
+			switch (optShoot){
+			case 1:
+				break;
+			case 2:
+				if(warrior.positionX == wumpus.positionX && warrior.positionY > wumpus.positionY)
+					warrior.live = false;
+				break;
+			case 3:
+				break;
+			case 4:
+				if(warrior.positionX > wumpus.positionX && warrior.positionY == wumpus.positionY)
+					warrior.live = false;
+				break;
+			case 5:
+				if(warrior.positionX < wumpus.positionX && warrior.positionY == wumpus.positionY)
+					warrior.live = false;
+				break;
+			case 6:
+				break;
+			case 7:
+				if(warrior.positionX == wumpus.positionX && warrior.positionY < wumpus.positionY)
+					warrior.live = false;
+				break;
+			case 8:
+				break;
+			}
+		}
+		
+		
+		
+	}
 	
-////	if(warrior.live){
-////		cout << "You win" << "\n" << "¡CONGRATULATIONS!";
-////	} else{
-////		cout << "You dead";
-////	}
-//}
+	if(warrior.live){
+		cout << "You win" << "\n" << "CONGRATULATIONS!";
+	} else{
+		cout << "You dead";
+	}
 	
 	return 0;
 }
