@@ -10,7 +10,7 @@ Be strategist because you can only move or shoot for each turn, and the Wumpus g
 this is an academic work for the District University of Bogotá
 _______________________________________________________________________________________________________________________
 
-##ESPAÑOL
+##**ESPAÑOL**
 Wumpus es un juego de texto, donde eres un héroe que esta ciego que cae en un mundo lleno de abismos junto con una misteriosa criatura ¡¡EL WUMPUS!!
 
 Tu misión es matar al Wumpus con tus flechas, antes de que él te coma o caigas en un abismo intentado huir del Wumpus. Puedes guiarte con el olfato y el tacto. Si sientes viento, significa que estas cerca de un abismo y si hueles un mal olor, el Wumpues esta cerca.
@@ -20,7 +20,7 @@ Sé estratega pues solo puedes moverte o disparar en cada turno, y el Wumpus est
 Esto es un trabajo para la Universidad Distrital Francisco José de Caldas.
 _______________________________________________________________________________________________________________________
 
-##PORTUGUÊS
+##**PORTUGUÊS**
 Wumpus é um jogo do texto, onde você é um herói cego, que cai num mundo cheio de abismos, juntamente com uma criatura misteriosa O WUMPUS!
 
 A sua missão é termine o Wumpus com as suas flechas antes que ele coma ou cair em um abismo tentando escapar do Wumpus. Você pode se guiar com olfato e tato. Se você sentir o vento, isso significa que você está perto dum abismo e se você sentir um cheiro ruim, o Wumpus está próximo.
