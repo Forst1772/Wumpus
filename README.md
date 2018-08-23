@@ -1,4 +1,7 @@
 # Wumpus
+- [English]( #english)
+- [Español]( #espaÑol)
+- [Português]( #portuguÊs)
 
 ## **ENGLISH**
 Wumpus is a text-based game, where you are blind hero who falls into a world full of abyss whit a mysterious creature THE WUMPUS!!
