@@ -152,7 +152,6 @@ int main(int argc, char *argv[]) {
 	int n = 0; //Dimension board
 	int state = 0; //State of the warrio
 	int option = 0; //Move or shoot
-	int optShoot = 0; //Place where shoot
 	
 	cout << "Please enter the game board dimension(10-20): ";
 	cin >> n;
@@ -193,7 +192,7 @@ int main(int argc, char *argv[]) {
 		cout << "Warrior say:\n";
 		for(int i = 0; i < n; i++){
 			for(int j = 0; j < n; j++){
-				if (map[i][j] == -5 || map[i][j] == -3 || map[i][j] == -1)
+				if (map[i][j] == -5 || map[i][j] == -3 || map[i][j] == -1 || map[i][j] == 1)
 					state = map[i][j];
 			}
 		}
@@ -207,7 +206,7 @@ int main(int argc, char *argv[]) {
 		case -1:
 			cout << "player in -2 wind\n";
 			break;
-		default:
+		case 1:
 			cout << "Nothing\n";
 		}
 		
@@ -216,51 +215,258 @@ int main(int argc, char *argv[]) {
 			cin >> option;		}while(option != 1 && option != 2);
 		
 		if(option == 1){//Warrior'll move
-			
+			system("CLS");
+			int optMove = 0; //Place where move
+			do{
+				cout << "Choose where move:\n1\t2\t3\n4\tU\t5\n6\t7\t8\n";
+				cout << "X: "<< warrior.positionX << " Y: " << warrior.positionY << "\n";
+				cin >> optMove;
+				system("CLS");
+				
+				switch (optMove){
+				case 1:
+					if(warrior.positionX != 0 && warrior.positionY != 0){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionX--;
+						warrior.positionY--;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else
+					   cout << "Ups! A leafy bush does not allow you to move.\n";
+					break;
+				case 2:
+					if(warrior.positionY != 0){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionY--;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else
+					   cout << "Ups! A leafy bush does not allow you to move.\n";
+					break;
+				case 3:
+					if(warrior.positionX != (n-1) && warrior.positionY != 0){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionX++;
+						warrior.positionY--;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else
+					   cout << "Ups! A leafy bush does not allow you to move.\n";
+					break;
+				case 4:
+					if(warrior.positionX != 0){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionX--;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else
+					   cout << "Ups! A leafy bush does not allow you to move.\n";
+					break;
+				case 5:
+					if(warrior.positionX != (n-1)){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionX++;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else{
+						cout << "Ups! A leafy bush does not allow you to move.\n";}
+					break;
+				case 6:
+					if(warrior.positionX != 0 && warrior.positionY != (n-1)){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionX--;
+						warrior.positionY++;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else{
+						cout << "Ups! A leafy bush does not allow you to move.\n";}
+					break;
+				case 7:
+					if(warrior.positionY != (n-1)){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionY++;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else{
+						cout << "Ups! A leafy bush does not allow you to move.\n";}
+					break;
+				case 8:
+					if(warrior.positionX != (n-1) && warrior.positionY != (n-1)){
+						particles(warrior.positionY,warrior.positionX,-1);
+						warrior.positionX++;
+						warrior.positionY++;
+						particles(warrior.positionY,warrior.positionX,1);
+						printMap(n);
+						optMove = 0;
+					}else{
+						cout << "Ups! A leafy bush does not allow you to move.\n";}
+					break;			
+				}
+			}while(optMove != 0);
 		} else if (option == 2){//warrior'll shoot
 			system("CLS");
-			cout << "Warrior X= "<<warrior.positionX<< " Y= "<<warrior.positionY;
-			cout << " wumpus X= "<<wumpus.positionX<< " Y= "<<wumpus.positionY;
+			int optShoot = 0; //Place where shoot
+			cout << "Choose where attack:\n1\t2\t3\n4\tU\t5\n6\t7\t8\n";	//1 2 3
+			cin >> optShoot;												//4   5
+			int x = warrior.positionX - wumpus.positionX;					//6 7 8
+			int y = warrior.positionY - wumpus.positionY;
 			
-			
-			cout << "Choose where atack:\n1\t2\t3\n4\tU\t5\n6\t7\t8\n";
-			cin >> optShoot;
 			switch (optShoot){
 			case 1:
+				if(abs(x) == abs(y) && x > 0 && y > 0)
+					wumpus.live = false;
 				break;
 			case 2:
 				if(warrior.positionX == wumpus.positionX && warrior.positionY > wumpus.positionY)
-					warrior.live = false;
+					wumpus.live = false;
 				break;
 			case 3:
+				if(abs(x) == abs(y) && x < 0 && y > 0)
+					wumpus.live = false;
 				break;
 			case 4:
 				if(warrior.positionX > wumpus.positionX && warrior.positionY == wumpus.positionY)
-					warrior.live = false;
+					wumpus.live = false;
 				break;
 			case 5:
 				if(warrior.positionX < wumpus.positionX && warrior.positionY == wumpus.positionY)
-					warrior.live = false;
+					wumpus.live = false;
 				break;
 			case 6:
+				if(abs(x) == abs(y) && x > 0 && y < 0)
+					wumpus.live = false;
 				break;
 			case 7:
 				if(warrior.positionX == wumpus.positionX && warrior.positionY < wumpus.positionY)
-					warrior.live = false;
+					wumpus.live = false;
 				break;
 			case 8:
+				if(abs(x) == abs(y) && x < 0 && y < 0)
+					wumpus.live = false;
 				break;
+			}
+			option = 0;
+		}
+//Rsdfjkjslfdoiewfjajkfsdajfasfdjkhaksjdhfkjahskfdhkajshfkjashkjdhfkjshadkjhfkjsahdfjkhaskjhkjdhfkjhsadkjfhksahfkjsahdjkfa
+		if(wumpus.live){
+			switch (optMove){
+			case 1:
+				if(wumpus.positionX != 0 && wumpus.positionY != 0){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionX--;
+					wumpus.positionY--;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else
+				   cout << "Ups! A leafy bush does not allow you to move.\n";
+				break;
+			case 2:
+				if(wumpus.positionY != 0){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionY--;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else
+				   cout << "Ups! A leafy bush does not allow you to move.\n";
+				break;
+			case 3:
+				if(wumpus.positionX != (n-1) && wumpus.positionY != 0){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionX++;
+					wumpus.positionY--;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else
+				   cout << "Ups! A leafy bush does not allow you to move.\n";
+				break;
+			case 4:
+				if(wumpus.positionX != 0){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionX--;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else
+				   cout << "Ups! A leafy bush does not allow you to move.\n";
+				break;
+			case 5:
+				if(wumpus.positionX != (n-1)){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionX++;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else{
+					cout << "Ups! A leafy bush does not allow you to move.\n";}
+				break;
+			case 6:
+				if(wumpus.positionX != 0 && wumpus.positionY != (n-1)){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionX--;
+					wumpus.positionY++;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else{
+					cout << "Ups! A leafy bush does not allow you to move.\n";}
+				break;
+			case 7:
+				if(wumpus.positionY != (n-1)){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionY++;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else{
+					cout << "Ups! A leafy bush does not allow you to move.\n";}
+				break;
+			case 8:
+				if(wumpus.positionX != (n-1) && wumpus.positionY != (n-1)){
+					particles(wumpus.positionY,wumpus.positionX,-1);
+					wumpus.positionX++;
+					wumpus.positionY++;
+					particles(wumpus.positionY,wumpus.positionX,1);
+					printMap(n);
+					optMove = 0;
+				}else{
+					cout << "Ups! A leafy bush does not allow you to move.\n";}
+				break;			
 			}
 		}
 		
-		
-		
+		//is Warrior dead?
+		for(int i = 0; i < n; i++){
+			for(int j = 0; j < n; j++){
+				if (map[i][j] == 6 || map[i][j] == 4){
+					warrior.live = false;
+					state = map[i][j];
+				}
+			}
+		}
 	}
 	
 	if(warrior.live){
 		cout << "You win" << "\n" << "CONGRATULATIONS!";
 	} else{
 		cout << "You dead";
+		switch(state){
+		case 4:
+			cout << ", you fell into an abyss";
+			break;
+		case 6:
+			cout << ", the Wumpus ate you";
+			break;
+		}
 	}
 	
 	return 0;
