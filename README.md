@@ -4,9 +4,9 @@
 - [Português]( #portuguÊs)
 
 ## **ENGLISH**
-Wumpus is a text-based game, where you are blind hero who falls into a world full of abyss whit a mysterious creature THE WUMPUS!!
+Wumpus is a text-based game, where you are a blind hero who falls into a world full of abyss whit a mysterious creature THE WUMPUS!!
 
-Your mission is hunt the Wumpus with your arrows before it eats you or you fall in an abyss. You can guide yourself through the smell and touch. If you feel wind, that means you are near an abyss and if you smell a bad smell that's the Wumpus.
+Your mission is to hunt the Wumpus with your arrows before it eats you or you fall in an abyss. You can guide yourself through the smell and touch. If you feel the wind, that means you are near an abyss and if you smell a bad smell that's the Wumpus.
 
 Be strategist because you can only move or shoot for each turn, and the Wumpus gets closer and closer.
 
